@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.kageno.atc"
-    compileSdk = 34 // تم التعديل من 36 إلى 34
+    compileSdk = 36 // ← تم إرجاعها إلى 36 لأن المكتبات الحديثة تتطلب ذلك
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -41,7 +41,7 @@ android {
     defaultConfig {
         applicationId = "com.kageno.atc"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 34 // ← يمكنك إبقاءها 34، لا مشكلة في ذلك
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
         // ✅ مهم: يمنع مشاكل الـ methods limit

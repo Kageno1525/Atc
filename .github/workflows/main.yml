@@ -39,10 +39,13 @@ jobs:
           channel: stable
 
       - name: Get dependencies
-        run: flutter pub get
+  run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release
+- name: Generate launcher icons      # ← جديد
+  run: dart run flutter_launcher_icons
+
+- name: Build APK
+  run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -51,3 +54,20 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

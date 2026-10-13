@@ -25,6 +25,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
+    // تفعيل وضع edgeToEdge عشان يدي مساحة أكبر للشاشة
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
@@ -64,8 +65,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
       },
       child: Scaffold(
         backgroundColor: AppTheme.bgMain,
+        // ← تم التعديل: SafeArea top: true عشان العناصر اللي فوق تبان
         body: SafeArea(
-          top: false,
+          top: true, 
+          bottom: true,
           child: Stack(
             children: [
               Column(
@@ -89,13 +92,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
                         javaScriptEnabled: true,
                         domStorageEnabled: true,
                         databaseEnabled: true,
-                        useHybridComposition: true,
+                        useHybridComposition: true, // مهم جداً للأداء
                         allowsInlineMediaPlayback: true,
                         mediaPlaybackRequiresUserGesture: false,
                         cacheEnabled: true,
                         clearCache: false,
                         supportZoom: false,
-                        verticalScrollBarEnabled: true,
+                        verticalScrollBarEnabled: false, // يخلي الشكل أنضف
                         horizontalScrollBarEnabled: false,
                         disableHorizontalScroll: true,
                         useShouldOverrideUrlLoading: true,
@@ -104,9 +107,19 @@ class _WebViewScreenState extends State<WebViewScreen> {
                         allowContentAccess: true,
                         geolocationEnabled: false,
                         transparentBackground: false,
+                        // ← إعدادات مهمة جداً عشان الموقع يظهر صح على الموبايل
+                        useWideViewPort: true, 
+                        loadWithOverviewMode: true,
+                        // ← إعدادات إضافية لتحسين الأداء
+                        hardwareAcceleration: true,
+                        offscreenPreRaster: true,
                       ),
                       onWebViewCreated: (controller) {
                         webViewController = controller;
+                      },
+                      // ← لوج عشان نشوف أخطاء الموقع لو موجودة
+                      onConsoleMessage: (controller, consoleMessage) {
+                        debugPrint("WebView Console: ${consoleMessage.message}");
                       },
                       onLoadStart: (controller, url) {
                         if (!mounted) return;
@@ -119,6 +132,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                         setState(() {
                           isLoading = false;
                         });
+                        // منع السكرول الزيادة
                         await controller.evaluateJavascript(source: """
                           document.body.style.overscrollBehavior = 'none';
                           document.documentElement.style.overscrollBehavior = 'none';
